@@ -1,0 +1,221 @@
+\chapter{Python code used for  Estimation of Dimensions}
+\label{app:ship_dimension_generator}
+
+The following Python program was developed to generate feasible
+combinations of the principal dimensions of the proposed vessel.
+The program evaluates combinations of length overall (LOA), breadth
+(B), depth (D), block coefficient ($C_B$), and displacement, and
+calculates the corresponding waterline length, breadth at the design
+waterline, draft, and principal dimensional ratios.
+
+\begin{lstlisting}[language=Python,
+    caption={Python program for generating feasible ship main dimensions},
+    label={lst:ship_dimension_generator}]
+import csv
+
+# ============================================================
+# SHIP MAIN DIMENSION GENERATOR
+# ============================================================
+
+# MAIN DIMENSIONS
+LOA_MIN = 114
+LOA_MAX = 118
+LOA_STEP = 1
+
+B_MIN = 14
+B_MAX = 16
+B_STEP = 1
+
+D_MIN = 9
+D_MAX = 10
+D_STEP = 1
+
+# BLOCK COEFFICIENT
+CB_VALUES = [0.380, 0.39, 0.395, 0.400]
+
+# DISPLACEMENT
+DISP_MIN = 3600
+DISP_MAX = 3850
+DISP_STEP = 50
+
+# CONSTANTS
+LWL_RATIO = 0.975
+B_DWL_RATIO = 0.94
+RHO = 1.025
+
+
+# ============================================================
+# GENERATE INTEGER VALUES
+# ============================================================
+
+LOA_VALUES = range(LOA_MIN, LOA_MAX + 1, LOA_STEP)
+B_VALUES = range(B_MIN, B_MAX + 1, B_STEP)
+D_VALUES = range(D_MIN, D_MAX + 1, D_STEP)
+DISP_VALUES = range(DISP_MIN, DISP_MAX + 1, DISP_STEP)
+
+
+# ============================================================
+# CALCULATE POSSIBLE DIMENSIONS
+# ============================================================
+
+results = []
+
+for LOA in LOA_VALUES:
+
+    # LWL is calculated from LOA
+    LWL = 0.975 * LOA
+
+    for B in B_VALUES:
+
+        # Breadth at DWL
+        B_DWL = 0.94 * B
+
+        for D in D_VALUES:
+
+            for CB in CB_VALUES:
+
+                for displacement in DISP_VALUES:
+
+                    # ----------------------------------------
+                    # DISPLACEMENT EQUATION
+                    #
+                    # Delta = rho x LWL x B_DWL x T x CB
+                    #
+                    # T = Delta / (rho x LWL x B_DWL x CB)
+                    # ----------------------------------------
+
+                    T = displacement / (
+                        RHO *
+                        LWL *
+                        B_DWL *
+                        CB
+                    )
+
+                    # Ratios
+                    L_B = LOA / B
+                    B_T = B / T
+                    D_T = D / T
+
+                    # Draft must be less than depth
+                    if T < D:
+
+                        results.append([
+                            LOA,
+                            LWL,
+                            B,
+                            B_DWL,
+                            D,
+                            CB,
+                            displacement,
+                            T,
+                            L_B,
+                            B_T,
+                            D_T
+                        ])
+
+
+# ============================================================
+# DISPLAY RESULTS
+# ============================================================
+
+print()
+print("=" * 120)
+print("POSSIBLE SHIP MAIN DIMENSIONS")
+print("=" * 120)
+
+print()
+
+print(
+    f"{'No.':<5}"
+    f"{'LOA':<7}"
+    f"{'LWL':<9}"
+    f"{'B':<7}"
+    f"{'B_DWL':<9}"
+    f"{'D':<7}"
+    f"{'CB':<8}"
+    f"{'Disp':<9}"
+    f"{'Draft':<9}"
+    f"{'L/B':<8}"
+    f"{'B/T':<8}"
+    f"{'D/T':<8}"
+)
+
+print("-" * 120)
+
+
+for i, row in enumerate(results, 1):
+
+    (
+        LOA,
+        LWL,
+        B,
+        B_DWL,
+        D,
+        CB,
+        displacement,
+        T,
+        L_B,
+        B_T,
+        D_T
+    ) = row
+
+    print(
+        f"{i:<5}"
+        f"{LOA:<7}"
+        f"{LWL:<9.3f}"
+        f"{B:<7}"
+        f"{B_DWL:<9.2f}"
+        f"{D:<7}"
+        f"{CB:<8.3f}"
+        f"{displacement:<9}"
+        f"{T:<9.3f}"
+        f"{L_B:<8.2f}"
+        f"{B_T:<8.2f}"
+        f"{D_T:<8.2f}"
+    )
+
+
+# ============================================================
+# SAVE RESULTS TO CSV
+# ============================================================
+
+filename = "ship_possible_dimensions.csv"
+
+with open(
+    filename,
+    "w",
+    newline="",
+    encoding="utf-8"
+) as file:
+
+    writer = csv.writer(file)
+
+    writer.writerow([
+        "LOA (m)",
+        "LWL (m)",
+        "Breadth B (m)",
+        "Breadth at DWL (m)",
+        "Depth D (m)",
+        "CB",
+        "Displacement (t)",
+        "Draft T (m)",
+        "L/B",
+        "B/T",
+        "D/T"
+    ])
+
+    for row in results:
+        writer.writerow(row)
+
+
+# ============================================================
+# FINAL MESSAGE
+# ============================================================
+
+print()
+print("=" * 120)
+print("TOTAL FEASIBLE COMBINATIONS =", len(results))
+print("=" * 120)
+print()
+print("Results saved as:", filename)
+\end{lstlisting}

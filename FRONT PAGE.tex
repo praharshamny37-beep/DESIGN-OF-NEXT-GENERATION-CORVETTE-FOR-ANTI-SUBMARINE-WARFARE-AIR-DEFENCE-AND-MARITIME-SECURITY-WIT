@@ -1,0 +1,108 @@
+
+\documentclass[12pt,a4paper]{report}
+
+
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{keyval}
+\usepackage[top=1.87cm,bottom=1.9cm,inside=3cm,outside=1.25cm]{geometry}
+\begin{document}
+
+\begin{titlepage}
+\thispagestyle{empty}
+
+% Header above the border
+\noindent
+\makebox[\textwidth][r]{%
+    \textit{\scriptsize
+    Department of Ship Technology, CUSAT, B.Tech (NA\&SB), Batch -- XLVIII}
+}
+
+\vspace{0.15cm}
+
+% Border dimensions
+\noindent
+\begin{tikzpicture}[remember picture,overlay]
+    \draw[line width=1.5pt]
+        ([xshift=2.5cm,yshift=-2.5cm]current page.north west)
+        rectangle
+        ([xshift=-2.5cm,yshift=2.5cm]current page.south east);
+\end{tikzpicture}
+
+% Cover page content
+\begin{center}
+
+\vspace*{1cm}
+
+% Project report heading
+{\Large\bfseries\underline{PROJECT REPORT}\par}
+
+\vspace{1.5cm}
+
+% Project title
+{\large\bfseries
+DESIGN OF NEXT GENERATION CORVETTE\\
+WITH ENHANCED STEALTH CAPABILITIES
+\par}
+
+\vspace{1.0cm}
+
+% Thesis statement
+{\normalsize
+\textit{
+Thesis submitted in partial fulfilment\\
+of the Requirements for the Award of\\
+The Degree of
+}
+\par}
+
+\vspace{0.4cm}
+
+% Degree
+{\Large\bfseries
+Bachelor of Technology
+\par}
+
+\vspace{0.15cm}
+
+{\normalsize In\par}
+
+\vspace{0.15cm}
+
+{\Large\bfseries
+Naval Architecture \& Ship Building
+\par}
+
+\vspace{0.6cm}
+
+% Author
+{\large\bfseries BY\par}
+
+\vspace{0.4cm}
+
+{\medium\bfseries
+KARRI PRAHARSHA
+\par}
+
+\vspace{0.4cm}
+
+% CUSAT emblem
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.3\linewidth]{cusat-emblem.jpg}
+    \label{fig:placeholder}
+\end{figure}
+
+% Department and university
+{\normalsize\bfseries
+DEPARTMENT OF SHIP TECHNOLOGY\\
+COCHIN UNIVERSITY OF SCIENCE AND TECHNOLOGY\\
+COCHIN -- 682022
+\par}
+
+\end{center}
+
+\end{titlepage}
+
+\end{document}
